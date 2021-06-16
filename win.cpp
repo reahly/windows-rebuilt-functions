@@ -1,4 +1,4 @@
-UINT utils::get_system_firmware_table( const DWORD firmware_table_signature, const DWORD firmware_table_id, const PVOID firmware_table_buffer, const DWORD buffer_size ) {
+UINT get_system_firmware_table( const DWORD firmware_table_signature, const DWORD firmware_table_id, const PVOID firmware_table_buffer, const DWORD buffer_size ) {
 	ULONG result = 0, returned_size;
 	const ULONG total_size = buffer_size + 0x10;
 
@@ -25,7 +25,7 @@ UINT utils::get_system_firmware_table( const DWORD firmware_table_signature, con
 	return result;
 }
 
-ULONG utils::get_adapters_info( PIP_ADAPTER_INFO adapter_info, const PULONG size ) {
+ULONG get_adapters_info( PIP_ADAPTER_INFO adapter_info, const PULONG size ) {
 	static auto loopback_interfaces = reinterpret_cast<int( __fastcall*)( void* )>( GetModuleHandleA( "IPHLPAPI.DLL" ) ) + 0x1038 );
 	if ( !loopback_interfaces )
 		return GetAdaptersInfo( adapter_info, size );
@@ -55,7 +55,7 @@ ULONG utils::get_adapters_info( PIP_ADAPTER_INFO adapter_info, const PULONG size
 	return v4;
 }
 
-BOOL utils::enum_display_devices( const LPCWSTR device_name, const DWORD device_number, const PDISPLAY_DEVICEW display_device, const DWORD flags ) {
+BOOL enum_display_devices( const LPCWSTR device_name, const DWORD device_number, const PDISPLAY_DEVICEW display_device, const DWORD flags ) {
 	UNICODE_STRING dest;
 	if ( device_name )
 		RtlInitUnicodeString( &dest, device_name );
