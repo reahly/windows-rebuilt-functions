@@ -1,4 +1,4 @@
-UINT utils::get_system_firmware_table( const DWORD firmware_table_signature, const DWORD firmware_Table_id, const PVOID firmware_table_buffer, const DWORD buffer_size ) {
+UINT utils::get_system_firmware_table( const DWORD firmware_table_signature, const DWORD firmware_table_id, const PVOID firmware_table_buffer, const DWORD buffer_size ) {
 	ULONG result = 0, returned_size;
 	const ULONG total_size = buffer_size + 0x10;
 
@@ -8,7 +8,7 @@ UINT utils::get_system_firmware_table( const DWORD firmware_table_signature, con
 
 	*reinterpret_cast<uintptr_t*>( firmware_info ) = firmware_table_signature;
 	*reinterpret_cast<uintptr_t*>( firmware_info + 0x4 ) = 1;
-	*reinterpret_cast<uintptr_t*>( firmware_info + 0x8 ) = firmware_Table_id;
+	*reinterpret_cast<uintptr_t*>( firmware_info + 0x8 ) = firmware_table_id;
 	*reinterpret_cast<uintptr_t*>( firmware_info + 0xC ) = buffer_size;
 
 	const auto status = NtQuerySystemInformation( static_cast<SYSTEM_INFORMATION_CLASS>( 0x4c ), reinterpret_cast<void*>( firmware_info ), total_size, &returned_size );
@@ -60,7 +60,7 @@ BOOL utils::enum_display_devices( const LPCWSTR device_name, const DWORD device_
 	if ( device_name )
 		RtlInitUnicodeString( &dest, device_name );
 
-	static auto nt_user_enum_display_devices = reinterpret_cast<NTSTATUS( __fastcall*)( PUNICODE_STRING, DWORD, PDISPLAY_DEVICEW, DWORD )>( GetProcAddress( GetModuleHandleA( "win32u.dll" ), "NtUserEnumDisplayDevices" ) );
+	static auto nt_user_enum_display_devices = reinterpret_cast<NTSTATUS( __fastcall* )( PUNICODE_STRING, DWORD, PDISPLAY_DEVICEW, DWORD )>( GetProcAddress( GetModuleHandleA( "win32u.dll" ), "NtUserEnumDisplayDevices" ) );
 	if ( !nt_user_enum_display_devices )
 		return EnumDisplayDevicesW( device_name, device_number, display_device, flags );
 
